@@ -8,8 +8,34 @@
 [![Build Status](https://travis-ci.org/peerchemist/finta.svg?branch=master)](https://travis-ci.org/peerchemist/finta)
 [![Patrons](https://img.shields.io/liberapay/patrons/peerchemist.svg?logo=liberapay)](https://img.shields.io/liberapay/patrons/peerchemist.svg?logo=liberapay)
 
-Common financial technical indicators implemented in Pandas.
 
+Updated to allow passing `DataFrameGroupBy` object to the function so multi-index dataframes such as below could be processed
+correctly without using a loop. However, the performance is slightly worse than looping through
+
+![example](examples/groupby.png)
+
+```python
+df.shape
+(223867, 1058)
+```
+
+```python
+%%timeit
+
+df_all = []
+for _, group in df.groupby(level=0):
+    df_all.append(TA.SMA(group))
+
+test1 = pd.concat(df_all)
+# 1.21 s ± 26.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+```
+```python
+%%timeit
+test2 = TA.SMA(df.groupby(level=0))
+# 2 s ± 20.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+```
+
+Common financial technical indicators implemented in Pandas.
 ![example](examples/plot.png)
 
 *This is work in progress, bugs are expected and results of some indicators
