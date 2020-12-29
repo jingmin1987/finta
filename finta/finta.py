@@ -2,6 +2,7 @@ from functools import wraps
 import pandas as pd
 import numpy as np
 from pandas import DataFrame, Series
+from finta.utils import insert_and_return
 
 
 def inputvalidator(input_="ohlc"):
@@ -38,6 +39,24 @@ def inputvalidator(input_="ohlc"):
     return dfcheck
 
 
+def allow_groupby(func):
+    @wraps(func)
+    def func_groupby(*args, **kwargs):
+
+        args = list(args)
+        i = 0 if isinstance(args[0], (pd.DataFrame, pd.core.groupby.generic.DataFrameGroupBy)) else 1
+
+        if isinstance(args[i], pd.DataFrame):
+            return func(*args, **kwargs)
+        else:
+            df_grouped = args.pop(i)
+            return df_grouped \
+                .apply(lambda grp: func(*insert_and_return(args, i, grp), **kwargs)) \
+                .reset_index(level=0, drop=True)
+
+    return func_groupby
+
+
 def apply(decorator):
     def decorate(cls):
         for attr in cls.__dict__:
@@ -49,6 +68,7 @@ def apply(decorator):
     return decorate
 
 
+@apply(allow_groupby)
 @apply(inputvalidator(input_="ohlc"))
 class TA:
 

@@ -50,3 +50,15 @@ def trending_down(df: pd.Series, period: int) -> pd.Series:
     """
 
     return pd.Series(df.diff(period) < 0, name="trending_down {}".format(period))
+
+
+def insert_and_return(a_list, i, value):
+    """Inserts a value to a list copy at a given position. The original list will not be modified
+    :param a_list: a list
+    :param i: index
+    :param value: value to insert
+    :return: a copied list with inserted value
+    """
+    b = a_list[:]
+    b.insert(i, value)
+    return b
