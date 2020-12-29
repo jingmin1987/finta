@@ -35,6 +35,21 @@ test2 = TA.SMA(df.groupby(level=0))
 # 2 s ± 20.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 ```
 
+```bash
+$ pytest -q tests/test_reg.py
+........................                                                 [100%]
+24 passed in 0.45s
+
+$ pytest -q tests/test_unit.py
+........................................................................ [ 85%]
+............                                                             [100%]
+84 passed in 3.08s
+
+$ pytest -q tests/test_utils_unit.py
+......                                                                   [100%]
+6 passed in 0.34s
+```
+
 Common financial technical indicators implemented in Pandas.
 ![example](examples/plot.png)
 

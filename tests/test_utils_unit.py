@@ -2,7 +2,7 @@ import pytest
 import os
 from pandas import DataFrame, Series
 from finta import TA
-from finta.utils import to_dataframe, resample, trending_down, trending_up
+from finta.utils import to_dataframe, resample, trending_down, trending_up, insert_and_return
 import numpy
 import json
 
@@ -59,3 +59,14 @@ def test_trending_down():
     assert isinstance(trending_down(ma, 10), Series)
 
     assert trending_down(ma, 10).values[-1]
+
+
+def test_insert_list():
+
+    a = [1, 4]
+    b = insert_and_return(a, 1, 2)
+    del a
+    assert b == [1, 2, 4]
+
+    a = []
+    assert insert_and_return(a, 10, 2) == [2]
